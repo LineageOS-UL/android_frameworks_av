@@ -82,7 +82,7 @@ EffectHalHidl::~EffectHalHidl() {
 }
 
 status_t EffectHalHidl::setInBuffer(const sp<EffectBufferHalInterface>& buffer) {
-    TIME_CHECK();
+    // TIME_CHECK();
 
     if (!mBuffersChanged) {
         if (buffer.get() == nullptr || mInBuffer.get() == nullptr) {
@@ -96,7 +96,7 @@ status_t EffectHalHidl::setInBuffer(const sp<EffectBufferHalInterface>& buffer) 
 }
 
 status_t EffectHalHidl::setOutBuffer(const sp<EffectBufferHalInterface>& buffer) {
-    TIME_CHECK();
+    // TIME_CHECK();
 
     if (!mBuffersChanged) {
         if (buffer.get() == nullptr || mOutBuffer.get() == nullptr) {
@@ -202,7 +202,7 @@ status_t EffectHalHidl::setProcessBuffers() {
 
 status_t EffectHalHidl::command(uint32_t cmdCode, uint32_t cmdSize, void *pCmdData,
         uint32_t *replySize, void *pReplyData) {
-    TIME_CHECK();
+    // TIME_CHECK();
 
     if (mEffect == 0) return NO_INIT;
 
@@ -235,7 +235,7 @@ status_t EffectHalHidl::command(uint32_t cmdCode, uint32_t cmdSize, void *pCmdDa
 }
 
 status_t EffectHalHidl::getDescriptor(effect_descriptor_t *pDescriptor) {
-    TIME_CHECK();
+    // TIME_CHECK();
 
     if (mEffect == 0) return NO_INIT;
     Result retval = Result::NOT_INITIALIZED;
@@ -250,7 +250,7 @@ status_t EffectHalHidl::getDescriptor(effect_descriptor_t *pDescriptor) {
 }
 
 status_t EffectHalHidl::close() {
-    TIME_CHECK();
+    // TIME_CHECK();
 
     if (mEffect == 0) return NO_INIT;
     Return<Result> ret = mEffect->close();
@@ -258,7 +258,7 @@ status_t EffectHalHidl::close() {
 }
 
 status_t EffectHalHidl::dump(int fd) {
-    TIME_CHECK();
+    // TIME_CHECK();
 
     if (mEffect == 0) return NO_INIT;
     native_handle_t* hidlHandle = native_handle_create(1, 0);
