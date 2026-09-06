@@ -56,6 +56,7 @@ cc_aconfig_library {
     aconfig_declarations: "camera_platform_flags",
     host_supported: true,
     vendor_available: true,
+    double_loadable: true,
 }
 
 java_aconfig_library {
