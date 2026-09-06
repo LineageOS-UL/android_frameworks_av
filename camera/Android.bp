@@ -70,6 +70,10 @@ cc_library_headers {
 cc_library {
     name: "libcamera_client",
     defaults: ["camera_parameter_library_defaults"],
+    // Legacy (pre-Treble) vendor camera HALs (device/asus/flo) link this
+    // directly -- see project README/lineage-21 notes. Additive: does not
+    // remove the existing platform variant.
+    vendor_available: true,
 
     aidl: {
         export_aidl_headers: true,
