@@ -75,6 +75,10 @@ cc_library {
     // directly -- see project README/lineage-21 notes. Additive: does not
     // remove the existing platform variant.
     vendor_available: true,
+    // libmediandk (an NDK-facing library) also links this, so it must be
+    // safe to load into both vendor and platform process address spaces
+    // simultaneously.
+    double_loadable: true,
 
     aidl: {
         export_aidl_headers: true,
