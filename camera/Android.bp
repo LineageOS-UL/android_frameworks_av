@@ -185,6 +185,12 @@ cc_library_static {
     // vendor-safe replacement is log/log.h (liblog), which provides the
     // same ALOG*/LOG_TAG macros this file actually uses.
     header_libs: ["liblog_headers"],
+    // CameraParameters.h itself uses utils/KeyedVector.h and utils/String8.h
+    // (real libutils types, not a deprecated shim like Log.h -- libutils is
+    // VNDK-core, so vendor code can link it directly). libcamera_client
+    // already declares this same dependency; libcamera_parameters was
+    // simply missing it.
+    shared_libs: ["libutils"],
 }
 
 // AIDL interface between camera clients and the camera service.
