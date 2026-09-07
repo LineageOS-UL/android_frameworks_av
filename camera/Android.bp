@@ -127,6 +127,15 @@ cc_library {
         "lib-platform-compat-native-api",
     ],
 
+    // ICameraClient.cpp/ICameraRecordingProxy.cpp/ICamera.cpp include
+    // media/hardware/HardwareAPI.h. On the platform variant this resolved
+    // transitively through another shared_lib; that path doesn't extend to
+    // this module's new vendor variant, so declare the real dependency
+    // directly. media_plugin_headers is already vendor_available.
+    header_libs: [
+        "media_plugin_headers",
+    ],
+
     include_dirs: [
         "system/media/private/camera/include",
         "frameworks/native/include/media/openmax",
