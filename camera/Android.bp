@@ -55,6 +55,8 @@ cc_aconfig_library {
     name: "camera_platform_flags_c_lib",
     aconfig_declarations: "camera_platform_flags",
     host_supported: true,
+    vendor_available: true,
+    double_loadable: true,
 }
 
 java_aconfig_library {
@@ -70,6 +72,14 @@ cc_library_headers {
 cc_library {
     name: "libcamera_client",
     defaults: ["camera_parameter_library_defaults"],
+    // Legacy (pre-Treble) vendor camera HALs (device/asus/flo) link this
+    // directly -- see project README/lineage-21 notes. Additive: does not
+    // remove the existing platform variant.
+    vendor_available: true,
+    // libmediandk (an NDK-facing library) also links this, so it must be
+    // safe to load into both vendor and platform process address spaces
+    // simultaneously.
+    double_loadable: true,
 
     aidl: {
         export_aidl_headers: true,
@@ -115,6 +125,15 @@ cc_library {
         "libcamera_metadata",
         "libnativewindow",
         "lib-platform-compat-native-api",
+    ],
+
+    // ICameraClient.cpp/ICameraRecordingProxy.cpp/ICamera.cpp include
+    // media/hardware/HardwareAPI.h. On the platform variant this resolved
+    // transitively through another shared_lib; that path doesn't extend to
+    // this module's new vendor variant, so declare the real dependency
+    // directly. media_plugin_headers is already vendor_available.
+    header_libs: [
+        "media_plugin_headers",
     ],
 
     include_dirs: [
@@ -165,12 +184,22 @@ cc_library_host_static {
 
 cc_library_static {
     name: "libcamera_parameters",
+    vendor_available: true,
 
     export_include_dirs: [
         "include",
     ],
     srcs: ["CameraParameters.cpp"],
-
+    // utils/Log.h (libutils) isn't available to the vendor variant; the
+    // vendor-safe replacement is log/log.h (liblog), which provides the
+    // same ALOG*/LOG_TAG macros this file actually uses.
+    header_libs: ["liblog_headers"],
+    // CameraParameters.h itself uses utils/KeyedVector.h and utils/String8.h
+    // (real libutils types, not a deprecated shim like Log.h -- libutils is
+    // VNDK-core, so vendor code can link it directly). libcamera_client
+    // already declares this same dependency; libcamera_parameters was
+    // simply missing it.
+    shared_libs: ["libutils"],
 }
 
 // AIDL interface between camera clients and the camera service.
